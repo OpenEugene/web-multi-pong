@@ -1,4 +1,4 @@
-﻿@page "/pong-component"
+﻿@page "/pong-ball"
 @using Blong.Data
 @using Blong.Services
 @using System.Threading;
@@ -39,7 +39,7 @@
          style="top:@(leftTop)px" />
 
     <div class="paddle right"
-         style="top:@(rightTop)px" />
+         style="top:0px" />
 
     <Ball Top="@ballTop" Left="@ballLeft" />
 </div>
@@ -50,16 +50,10 @@
 @code {
     private int currentCount = 0;
     private int leftTop = 0;
-    private int rightTop = 0;
     private int ballLeft = 300;
     private int ballTop = 200;
 
-
-
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
+   
     private void LeftUp()
     {
         leftTop -= 10;
@@ -73,18 +67,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //gameManager.Awake(); // let's go!
-
+      
+        // set up the game loop
         Timer _timer = new Timer(
             callback: Update,
             state: null,
-            dueTime: 500,
-            period: 500);
+            dueTime: 1000,  // first check
+            period: 500);  // all other checks
     }
 
     private void Update(object timerState)
     {
-        InvokeAsync(() =>
+        InvokeAsync(() =>  // threading dispatch wrapper
         {
             ballLeft-=5;
             StateHasChanged();

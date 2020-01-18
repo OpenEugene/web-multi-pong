@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -17,7 +18,7 @@ namespace Blong.Data
         public double Direction { get; set; }
         public double Speed { get; set; }
 
-        public EventCallback UpdateCallback { get; set; }
+        public TimerCallback Update { get; set; }
 
     }
 }

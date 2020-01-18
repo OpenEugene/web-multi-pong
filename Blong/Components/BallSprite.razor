@@ -1,0 +1,46 @@
+﻿@using System.ComponentModel
+@using System.Threading
+@using Blong.Data
+@using Blong.Services
+@inject GameManager gameManager
+<style>
+
+    .ball {
+        width: 25px;
+        height: 25px;
+        background-color: whitesmoke;
+        position: relative;
+    }
+
+ </style>
+
+<div class="ball"
+     style="top: @(Sprite.Top)px;left: @(Sprite.Left)px;" />
+
+@code {
+
+
+    [Parameter]
+    public Sprite Sprite { get ; set ; }
+
+
+    // get ot know your component lifecycle : 
+    // https://docs.microsoft.com/en-us/aspnet/core/blazor/lifecycle?view=aspnetcore-3.1
+    //
+
+    protected override void OnParametersSet()
+    {
+
+        // init the timer update event
+        Sprite.Update = (timeState) =>
+        {
+            var sprite = (Sprite) timeState;
+            sprite.Left -= 5;
+            InvokeAsync(() => // threading dispatch wrapper
+            {
+                StateHasChanged();
+            });
+        };
+
+    }
+}
