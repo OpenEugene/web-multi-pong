@@ -1,0 +1,38 @@
+﻿@using System.ComponentModel
+@using Blong.Data
+@using Blong.Services
+@inject GameManager gameManager
+<style>
+
+    .ball {
+        width: 25px;
+        height: 25px;
+        background-color: whitesmoke;
+        position: relative;
+    }
+
+ </style>
+
+<div class="ball"
+     style="top: @(Top)px;left: @(Left)px;" />
+
+@code {
+
+
+    [Parameter]
+    public int Top { get ; set ; }
+   
+
+    [Parameter]
+    public int Left { get ; set ; }
+    
+
+    [Parameter]
+    public string Direction { get ; set ; }
+    
+
+    [Parameter]
+    public string Speed { get ; set ; }
+
+
+}

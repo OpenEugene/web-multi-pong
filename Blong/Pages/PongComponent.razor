@@ -1,16 +1,12 @@
-﻿@page "/pong-one"
+﻿@page "/pong-component"
+@using Blong.Data
+@using Blong.Services
+@using System.Threading;
+@inject GameManager gameManager
 
 <h1>Pong</h1>
 
 <style>
-
-    .ball {
-        width: 25px;
-        height: 25px;
-        background-color: whitesmoke;
-        position: relative;
-       
-    }
 
     .paddle {
         width: 25px;
@@ -39,32 +35,59 @@
 </style>
 
 <div class="court">
-    <div class="paddle left" 
+    <div class="paddle left"
          style="top:@(leftTop)px" />
 
-    <div class="paddle right" 
+    <div class="paddle right"
          style="top:@(rightTop)px" />
 
-    <div class="ball" 
-         style="top: 200px;left: 300px;" />
+    <Ball Top="@ballTop" Left="@ballLeft" />
 </div>
 
 <button class="btn btn-primary" @onclick="LeftUp">Up</button>
 <button class="btn btn-primary" @onclick="LeftDown">Down</button>
 
 @code {
-   
+    private int currentCount = 0;
     private int leftTop = 0;
     private int rightTop = 0;
+    private int ballLeft = 300;
+    private int ballTop = 200;
 
 
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
     private void LeftUp()
     {
         leftTop -= 10;
-       
+
     }
     private void LeftDown()
     {
         leftTop += 10;
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //gameManager.Awake(); // let's go!
+
+        Timer _timer = new Timer(
+            callback: Update,
+            state: null,
+            dueTime: 500,
+            period: 500);
+    }
+
+    private void Update(object timerState)
+    {
+        InvokeAsync(() =>
+        {
+            ballLeft-=5;
+            StateHasChanged();
+        });
     }
 }

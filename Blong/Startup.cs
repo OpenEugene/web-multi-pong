@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Blong.Data;
+using Blong.Services;
 
 namespace Blong
 {
@@ -28,6 +29,7 @@ namespace Blong
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<GameManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
