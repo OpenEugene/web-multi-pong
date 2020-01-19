@@ -15,8 +15,8 @@ namespace Blong.Data
         public int Top { get; set; }
         public int Left { get; set; }
 
-        public double Direction { get; set; }
-        public double Speed { get; set; }
+        public int Direction { get; set; }
+        public int Speed { get; set; }
 
         public TimerCallback Update { get; set; }
 

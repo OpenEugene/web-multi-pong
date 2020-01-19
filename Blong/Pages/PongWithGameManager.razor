@@ -1,0 +1,99 @@
+﻿@page "/pong-game"
+@using Blong.Data
+@using Blong.Services
+@using Blong.Components
+@using System.Threading;
+@inject GameManager gameManager
+
+<h1>Pong Game</h1>
+
+<style>
+
+    .court {
+        background-color: black;
+        width: 600px;
+        height: 400px;
+    }
+
+    .left {
+        background-color: crimson;
+        float: left;
+        position: relative;
+        left: 10;
+    }
+
+    .right {
+        background-color: cyan;
+        float: right;
+        position: relative;
+        left: 720;
+    }
+   
+</style>
+
+<div class="court">
+    <PaddleSprite Sprite="@leftPaddleSprite" Class="left" />
+    <PaddleSprite Sprite="@rightPaddleSprite" Class="right"/>
+  
+    <BallSprite Sprite="@ballSprite" />
+</div>
+
+<button class="btn btn-primary" @onclick="LeftUp">Up</button>
+<button class="btn btn-primary" @onclick="LeftDown">Down</button>
+
+@code {
+    private int currentCount = 0;
+    private int leftTop = 0;
+
+    private Sprite ballSprite = new Sprite
+    {
+        Top = 200,
+        Left = 300,
+
+    };
+
+    private Sprite leftPaddleSprite = new Sprite
+    {
+        Top = 0,
+        Direction = 0,
+        Speed = 0
+       
+    };
+
+    private Sprite rightPaddleSprite = new Sprite
+    {
+        Top = 0,
+        Direction = 0,
+        Speed = 0
+
+    };
+
+    private void LeftUp()
+    {
+        leftPaddleSprite.Direction = 0;
+        leftPaddleSprite.Speed = 5;
+    }
+
+    private void LeftDown()
+    {
+        leftPaddleSprite.Direction = 180;
+        leftPaddleSprite.Speed = 5;
+    }
+
+    // get ot know your component lifecycle : 
+    // https://docs.microsoft.com/en-us/aspnet/core/blazor/lifecycle?view=aspnetcore-3.1
+    //
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            gameManager.RestartGame();
+            gameManager.AddSprite(ballSprite);
+            gameManager.AddSprite(leftPaddleSprite);
+            gameManager.AddSprite(rightPaddleSprite);
+            gameManager.Awake();
+           
+        }
+    }
+
+}

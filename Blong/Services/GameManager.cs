@@ -7,19 +7,19 @@ namespace Blong.Services
 {
     public class GameManager
     {
-        private List<Sprite> _sprites = new List<Sprite>();
+        public List<Sprite> Sprites = new List<Sprite>();
         private Timer _timer;
         public void AddSprite(Sprite sprite)
         {
-            _sprites.Add(sprite);
+            Sprites.Add(sprite);
         }
         public void Awake()
         {
             _timer = new Timer(
                 callback: Update,
-                state: _sprites,
-                dueTime: 1000,
-                period: 2000);
+                state: Sprites,
+                dueTime: 500,
+                period: 100);
         }
 
         private void Update(object timerState)
@@ -27,19 +27,18 @@ namespace Blong.Services
             var sprites = timerState as List<Sprite>;
             foreach (var sprite in sprites)
             {
-                var left = sprite.Left;
-                Interlocked.Decrement(ref left);
-                sprite.Left = left;
-                //sprite.Component.StateHasChanged();
+                sprite.Update(sprite);
             }
-
-            ///Interlocked.Increment(ref state.Counter);
 
         }
 
        
         public void PauseGame() { }
-        public void RestartGame() { }
+
+        public void RestartGame()
+        {
+            Sprites = new List<Sprite>();
+        }
     }
 
     //class TimerState
