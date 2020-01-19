@@ -33,6 +33,7 @@ namespace Blong.Data
         }
         
         public string Id = Guid.NewGuid().ToString(); //default to unique
+        public string UniqueId = Guid.NewGuid().ToString(); //default to unique
         public double Vx => (Speed) * Math.Cos(ConvertToRadians(Direction));
         public double Vy => (Speed) * Math.Sin(ConvertToRadians(Direction));
         

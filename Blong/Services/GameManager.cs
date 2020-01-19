@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Blong.Data;
 
@@ -16,6 +17,12 @@ namespace Blong.Services
         public void AddSprite(Sprite sprite)
         {
             Sprites.Add(sprite);
+
+            #region multiplayer
+
+            AttachToMaster(sprite); // if there is another with the same Id hijack it's box 
+
+            #endregion
         }
 
         public void Awake()
@@ -107,7 +114,48 @@ namespace Blong.Services
             return null;
         }
 
+        private void SyncMultiplayer(List<Sprite> sprites)
+        {
+            var spriteIds = sprites.Select(s => s.Id).Distinct();
 
+            foreach (var id in spriteIds)
+            {
+                var masterSprite = sprites.FirstOrDefault(s => s.Id == id);
+                var otherSprites = sprites.Where(s => s.Id == id && s.UniqueId != masterSprite.UniqueId);
+                foreach (var sprite in otherSprites)
+                {
+                    sprite.Speed = masterSprite.Speed;
+                    sprite.Direction = masterSprite.Direction;
+                    sprite.Box = masterSprite.Box;  //super dicey
+                }
+            }
+        }
+
+        private List<Sprite> GetSprites()
+        {
+
+            // we only need one of each ID for multiplayer because they are sharing boxes.
+
+            var spriteIds = Sprites.Select(s => s.Id).Distinct();
+            var sprites = new List<Sprite>();
+
+            foreach (var id in spriteIds)
+            {
+                var masterSprite = Sprites.FirstOrDefault(s => s.Id == id);
+                sprites.Add(masterSprite);
+            }
+
+            return sprites;
+        }
+
+        private void AttachToMaster(Sprite sprite)
+        {
+            var masterSprite = Sprites.FirstOrDefault(s => s.Id == sprite.Id);
+            if (masterSprite != null)
+            {
+                sprite.Box = masterSprite.Box;  // super dicey
+            }
+        }
         public void PauseGame()
         {
             IsAwake = false;
