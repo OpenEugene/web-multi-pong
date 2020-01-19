@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Blong.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Identity;
 
 namespace Blong.Services
 {
@@ -31,14 +32,17 @@ namespace Blong.Services
         {
             var sprites = timerState as List<Sprite>;
 
-            CheckOutOfBounds(sprites);
             DetectCollisions(sprites);
-    
+            CheckOutOfBounds(sprites);
+            Render(sprites);
+        }
+
+        private void Render(List<Sprite> sprites)
+        {
             foreach (var sprite in sprites)
             {
-                sprite.Update(sprite);
+                sprite.Render(sprite);
             }
-
         }
 
         private void CheckOutOfBounds(List<Sprite> sprites)
@@ -47,14 +51,20 @@ namespace Blong.Services
 
             foreach (var sprite in sprites)
             {
-                if (sprite.OutOfBounds != null) // does it handle OOB?
+                if (sprite.OutOfBounds != null & sprite.IsFree) // does it handle OOB?
                 {
                     if (sprite.Box.Top < Bounds.Top ||
                         sprite.Box.Bottom > Bounds.Bottom ||
                         sprite.Box.Left < Bounds.Left ||
                         sprite.Box.Right > Bounds.Right )
                     {
-                        sprite.OutOfBounds(Bounds);
+                        if (sprite.IsFree)
+                        {
+                            sprite.Busy();
+                            sprite.OutOfBounds(Bounds);
+                            sprite.Free();
+                            //sprite.Debounce(10);
+                        }
                     }
                 }
             }
@@ -65,12 +75,18 @@ namespace Blong.Services
             // look for box overlaps
             foreach (var sprite in sprites)
             {
-                if (sprite.Collide != null) // does it handle collisions?
+                if (sprite.Collide != null & sprite.IsFree) // does it handle collisions?
                 {
                     var target = Colliding(sprite, sprites);
                     if (target != null)
                     {
-                        sprite.Collide(target);
+                        if (sprite.IsFree)
+                        {
+                            sprite.Busy();
+                            sprite.Collide(target);
+                            sprite.Free();
+                            //sprite.Debounce(2);
+                        }
                     }
                 }
             }

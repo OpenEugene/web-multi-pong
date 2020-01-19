@@ -37,6 +37,7 @@
         <button class="btn btn-primary" @onclick="RightDown">Down</button>
     </div>
 </div>
+
 @code {
 
     private GameManager gameManager = new GameManager();
@@ -49,7 +50,7 @@
             Height = 25,
             Width = 25
         },
-        Direction = 280,
+        Direction = -120,  // zero is down + counter-clockwize - clockwize
         Speed = 5
 
     };
@@ -75,25 +76,25 @@
 
     private void LeftUp()
     {
-        leftPaddleSprite.Direction = 0;
+        leftPaddleSprite.Direction = 180;
         leftPaddleSprite.Speed = 5;
     }
 
     private void LeftDown()
     {
-        leftPaddleSprite.Direction = 180;
+        leftPaddleSprite.Direction = 0;
         leftPaddleSprite.Speed = 5;
     }
 
     private void RightUp()
     {
-        rightPaddleSprite.Direction = 0;
+        rightPaddleSprite.Direction = 180;
         rightPaddleSprite.Speed = 5;
     }
 
     private void RightDown()
     {
-        rightPaddleSprite.Direction = 180;
+        rightPaddleSprite.Direction = 0;
         rightPaddleSprite.Speed = 5;
     }
 

@@ -14,14 +14,16 @@ namespace Blong.Data
     {
         
         public Box Box { get; set; }
-        public double Direction { get; set; } = 0;
+        public double Direction { get; set; } = 0;  //down
         public int Speed { get; set; } = 0;
 
-        public TimerCallback Update { get; set; }
+        public TimerCallback Render { get; set; }
 
 
         #region Physics & Math
+
         public Action<Sprite> Collide { get; set; }
+       
         public Action<Box> OutOfBounds { get; set; }
         public void MoveBox()
         {
@@ -42,10 +44,41 @@ namespace Blong.Data
             return (180 / Math.PI) * radians;
         }
 
-
         #endregion
 
+        #region Free/Busy and Debounce
 
-       
+        public int DebounceCount { get; set; } = 0;
+        private bool _isBusy = false; // stop event storms
+        public void Debounce(int count)
+        {
+            // up the number of updates to skip accepting events
+            DebounceCount+= count;
+        }
+
+        public void Bounce()
+        {
+            // burn down the debounce.
+            if(DebounceCount>0) DebounceCount--;
+        }
+
+        public bool Debounced()
+        {
+            return DebounceCount < 1;
+        }
+
+        public void Free()
+        {
+            _isBusy = false;
+        }
+
+        public void Busy()
+        {
+            _isBusy = true;
+        }
+
+        public bool IsFree => !_isBusy & Debounced();
+
+        #endregion
     }
 }

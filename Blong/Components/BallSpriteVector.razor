@@ -1,4 +1,5 @@
 ﻿@using System.ComponentModel
+@using System.Numerics
 @inject GameManager gameManager
 <style>
 
@@ -44,13 +45,15 @@
 
         Sprite.Collide = (target) =>
         {
-
+            Vector2 vectorResult = new Vector2(Sprite.Box.Top, Sprite.Box.Left);
+            
             var vx = Sprite.Vx;
             var vy = Sprite.Vy;
 
+
             if (Sprite.Box.Left < target.Box.Right)  // overlap left
             {
-                vy = -Sprite.Vy;  // lame!  use reflected normalized vectors
+                vy = -Sprite.Vy;
             }
 
 
@@ -79,7 +82,11 @@
             var angle = Math.Atan2(vy, vx);
             Sprite.Direction = Sprite.ConvertToDegrees(angle);
 
-  
+            //if (Sprite.Box.Top < bounds.Top) Sprite.Box.Top = bounds.Top;
+            //if (Sprite.Box.Bottom > bounds.Bottom) Sprite.Box.Top = bounds.Bottom-Sprite.Box.Height;
+            //if (Sprite.Box.Left < bounds.Left) Sprite.Box.Left = bounds.Left;
+            //if (Sprite.Box.Right > bounds.Right) Sprite.Box.Left = bounds.Bottom-Sprite.Box.Width;
+
         };
 
         #endregion

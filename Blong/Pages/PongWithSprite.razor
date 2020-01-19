@@ -55,7 +55,7 @@
             Height = 25,
             Width = 25
         },
-        Direction = 90,
+        Direction = -120,
         Speed = 5
     };
 
@@ -80,7 +80,7 @@
         {
             // set up the game loop
             Timer _timer = new Timer(
-                callback: ballSprite.Update,
+                callback: ballSprite.Render,
                 state: ballSprite,
                 dueTime: 1000,  // first check
                 period: 500);  // all other checks

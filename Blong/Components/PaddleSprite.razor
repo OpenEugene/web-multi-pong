@@ -32,19 +32,12 @@
     {
 
         // init the timer update event
-        Sprite.Update = (timeState) =>
+        Sprite.Render = (timeState) =>
         {
             var sprite = (Sprite) timeState;
             // convert direction and speed to delta-x
 
-            if (sprite.Direction < 180)
-            {
-                sprite.Box.Top -= sprite.Speed;
-            }
-            else
-            {
-                sprite.Box.Top += sprite.Speed;
-            }
+            Sprite.MoveBox();
 
             InvokeAsync(() => // threading dispatch wrapper
             {
