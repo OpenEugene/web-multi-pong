@@ -24,7 +24,7 @@
 <div class="court">
     <PaddleSprite Sprite="@leftPaddleSprite" Class="left" />
     <PaddleSprite Sprite="@rightPaddleSprite" Class="right" />
-    <BallSprite Sprite="@ballSprite" />
+    <BallSpriteVector Sprite="@ballSprite" />
 </div>
 
 <div style="width: 600px;">
@@ -36,85 +36,122 @@
         <button class="btn btn-primary" @onclick="RightUp">Up</button>
         <button class="btn btn-primary" @onclick="RightDown">Down</button>
     </div>
+    <div style="text-align: center">
+        <button class="btn btn-primary" @onclick="Faster">Faster</button>
+        <button class="btn btn-primary" @onclick="Reset">Reset</button>
+        <button class="btn btn-primary" @onclick="Slower">Slower</button>
+    </div>
 </div>
 @code {
 
-    private Sprite ballSprite = new Sprite
-    {
-        Box = new Box
-        {
-            Top = 200,
-            Left = 300,
-            Height = 25,
-            Width = 25
-        },
-        Direction = -120,
-        Speed = 5
+    Sprite ballSprite, leftPaddleSprite, rightPaddleSprite;
 
-    };
-
-    private Sprite leftPaddleSprite = new Sprite
-    {
-        Box = new Box
-        {
-            Height = 100,
-            Width = 25
-        }
-
-    };
-
-    private Sprite rightPaddleSprite = new Sprite
-    {
-        Box = new Box
-        {
-            Left = 575,
-            Height = 100,
-            Width = 25
-        }
-
-    };
 
     private void LeftUp()
-    {
-        leftPaddleSprite.Direction = 0;
-        leftPaddleSprite.Speed = 5;
-    }
-
-    private void LeftDown()
     {
         leftPaddleSprite.Direction = 180;
         leftPaddleSprite.Speed = 5;
     }
 
-    private void RightUp()
+    private void LeftDown()
     {
-        rightPaddleSprite.Direction = 0;
-        rightPaddleSprite.Speed = 5;
+        leftPaddleSprite.Direction = 0;
+        leftPaddleSprite.Speed = 5;
     }
 
-    private void RightDown()
+    private void RightUp()
     {
         rightPaddleSprite.Direction = 180;
         rightPaddleSprite.Speed = 5;
     }
 
-    // get ot know your component lifecycle :
-    // https://docs.microsoft.com/en-us/aspnet/core/blazor/lifecycle?view=aspnetcore-3.1
-    //
-    protected override void OnAfterRender(bool firstRender)
+    private void RightDown()
     {
-        if (firstRender)
+        rightPaddleSprite.Direction = 0;
+        rightPaddleSprite.Speed = 5;
+    }
+
+    private void Faster()
+    {
+        ballSprite.Speed++;
+    }
+
+    private void Slower()
+    {
+        ballSprite.Speed--;
+    }
+
+    private void Reset()
+    {
+        ballSprite.Box.Top = 200;
+        ballSprite.Box.Left = 300;
+    }
+
+    protected override void OnInitialized()
+    {
+        ballSprite = gameManager.Sprites.FirstOrDefault(s => s.Id == "ballSprite");
+        if (ballSprite == null)
         {
+            ballSprite = new Sprite
+            {
+                Id = "ballSprite",
+                Box = new Box
+                {
+                    Top = 200,
+                    Left = 300,
+                    Height = 25,
+                    Width = 25
+                },
+                Direction = -120,
+                Speed = 5
 
-            gameManager.Bounds = new Box {Width = 600, Height = 400};
-
-            gameManager.RestartGame();
+            };
             gameManager.AddSprite(ballSprite);
+        }
+
+        // look for paddle sprites
+        leftPaddleSprite = gameManager.Sprites.FirstOrDefault(s => s.Id == "leftPaddleSprite");
+        if (leftPaddleSprite == null)
+        {
+            leftPaddleSprite = new Sprite
+            {
+                Id = "leftPaddleSprite",
+                Box = new Box
+                {
+                    Height = 100,
+                    Width = 25
+                }
+
+            };
             gameManager.AddSprite(leftPaddleSprite);
-            gameManager.AddSprite(rightPaddleSprite);
-            gameManager.Awake();
 
         }
+
+        rightPaddleSprite = gameManager.Sprites.FirstOrDefault(s => s.Id == "rightPaddleSprite");
+        if (rightPaddleSprite == null)
+        {
+            rightPaddleSprite = new Sprite
+            {
+                Id = "rightPaddleSprite",
+                Box = new Box
+                {
+                    Left = 575,
+                    Height = 100,
+                    Width = 25
+                }
+
+            };
+            gameManager.AddSprite(rightPaddleSprite);
+
+        }
+
+        gameManager.Bounds = new Box { Width = 600, Height = 400 };
+
+        if (!gameManager.IsAwake)
+        {
+            gameManager.Awake();
+        }
     }
+
 
 }

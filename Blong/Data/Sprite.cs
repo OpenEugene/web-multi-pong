@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -31,10 +32,12 @@ namespace Blong.Data
             Box.Left += Convert.ToInt32(Vy);
         }
         
-        public Guid Id = Guid.NewGuid();
+        public string Id = Guid.NewGuid().ToString(); //default to unique
         public double Vx => (Speed) * Math.Cos(ConvertToRadians(Direction));
         public double Vy => (Speed) * Math.Sin(ConvertToRadians(Direction));
         
+        public Vector2 Vector => new Vector2(Convert.ToSingle(Vx),Convert.ToSingle(Vy));
+
         public double ConvertToRadians(double angle)
         {
             return (Math.PI / 180) * angle;
@@ -46,39 +49,5 @@ namespace Blong.Data
 
         #endregion
 
-        #region Free/Busy and Debounce
-
-        public int DebounceCount { get; set; } = 0;
-        private bool _isBusy = false; // stop event storms
-        public void Debounce(int count)
-        {
-            // up the number of updates to skip accepting events
-            DebounceCount+= count;
-        }
-
-        public void Bounce()
-        {
-            // burn down the debounce.
-            if(DebounceCount>0) DebounceCount--;
-        }
-
-        public bool Debounced()
-        {
-            return DebounceCount < 1;
-        }
-
-        public void Free()
-        {
-            _isBusy = false;
-        }
-
-        public void Busy()
-        {
-            _isBusy = true;
-        }
-
-        public bool IsFree => !_isBusy & Debounced();
-
-        #endregion
     }
 }

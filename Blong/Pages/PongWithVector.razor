@@ -1,0 +1,119 @@
+﻿@page "/pong-vector"
+
+<h1>Pong Game</h1>
+
+<style>
+
+    .court {
+        background-color: black;
+        width: 600px;
+        height: 400px;
+        position: relative;
+    }
+
+    .left {
+        background-color: crimson;
+    }
+
+    .right {
+        background-color: cyan;
+    }
+   
+</style>
+
+<div class="court">
+    <PaddleSprite Sprite="@leftPaddleSprite" Class="left" />
+    <PaddleSprite Sprite="@rightPaddleSprite" Class="right"/>
+    <BallSpriteVector Sprite="@ballSprite" />
+</div>
+
+<div style="width: 600px;">
+    <div style="float: left">
+        <button class="btn btn-primary" @onclick="LeftUp">Up</button>
+        <button class="btn btn-primary" @onclick="LeftDown">Down</button>
+    </div>
+    <div style="float: right">
+        <button class="btn btn-primary" @onclick="RightUp">Up</button>
+        <button class="btn btn-primary" @onclick="RightDown">Down</button>
+    </div>
+</div>
+
+@code {
+
+    private GameManager gameManager = new GameManager();
+
+    private Sprite ballSprite = new Sprite
+    {
+        Box = new Box {
+            Top = 200,
+            Left = 300,
+            Height = 25,
+            Width = 25
+        },
+        Direction = -120,  // zero is down + counter-clockwize - clockwize
+        Speed = 5
+
+    };
+
+    private Sprite leftPaddleSprite = new Sprite
+    {
+        Box = new Box {
+            Height = 100,
+            Width = 25
+        }
+
+    };
+
+    private Sprite rightPaddleSprite = new Sprite
+    {
+        Box = new Box {
+            Left = 575,
+            Height = 100,
+            Width = 25
+        }
+
+    };
+
+    private void LeftUp()
+    {
+        leftPaddleSprite.Direction = 180;
+        leftPaddleSprite.Speed = 5;
+    }
+
+    private void LeftDown()
+    {
+        leftPaddleSprite.Direction = 0;
+        leftPaddleSprite.Speed = 5;
+    }
+
+    private void RightUp()
+    {
+        rightPaddleSprite.Direction = 180;
+        rightPaddleSprite.Speed = 5;
+    }
+
+    private void RightDown()
+    {
+        rightPaddleSprite.Direction = 0;
+        rightPaddleSprite.Speed = 5;
+    }
+
+    // get ot know your component lifecycle : 
+    // https://docs.microsoft.com/en-us/aspnet/core/blazor/lifecycle?view=aspnetcore-3.1
+    //
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            gameManager.Bounds = new Box {Width = 600, Height = 400};
+
+            gameManager.RestartGame();
+            gameManager.AddSprite(ballSprite);
+            gameManager.AddSprite(leftPaddleSprite);
+            gameManager.AddSprite(rightPaddleSprite);
+            gameManager.Awake();
+
+        }
+    }
+
+}

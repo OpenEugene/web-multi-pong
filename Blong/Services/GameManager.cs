@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO.Enumeration;
 using System.Threading;
-using System.Threading.Tasks;
 using Blong.Data;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Identity;
+
 
 namespace Blong.Services
 {
@@ -14,18 +10,22 @@ namespace Blong.Services
     {
         public List<Sprite> Sprites = new List<Sprite>();
         public Box Bounds = null;
+        public bool IsAwake = false;
+
         private Timer _timer;
         public void AddSprite(Sprite sprite)
         {
             Sprites.Add(sprite);
         }
+
         public void Awake()
         {
             _timer = new Timer(
                 callback: Update,
                 state: Sprites,
-                dueTime: 250,
-                period: 250);
+                dueTime: 100,
+                period: 100);
+            IsAwake = true;
         }
 
         private void Update(object timerState)
@@ -51,20 +51,14 @@ namespace Blong.Services
 
             foreach (var sprite in sprites)
             {
-                if (sprite.OutOfBounds != null & sprite.IsFree) // does it handle OOB?
+                if (sprite.OutOfBounds != null ) // does it handle OOB?
                 {
                     if (sprite.Box.Top < Bounds.Top ||
                         sprite.Box.Bottom > Bounds.Bottom ||
                         sprite.Box.Left < Bounds.Left ||
-                        sprite.Box.Right > Bounds.Right )
+                        sprite.Box.Right > Bounds.Right)
                     {
-                        if (sprite.IsFree)
-                        {
-                            sprite.Busy();
-                            sprite.OutOfBounds(Bounds);
-                            sprite.Free();
-                            //sprite.Debounce(10);
-                        }
+                        sprite.OutOfBounds(Bounds);
                     }
                 }
             }
@@ -75,18 +69,12 @@ namespace Blong.Services
             // look for box overlaps
             foreach (var sprite in sprites)
             {
-                if (sprite.Collide != null & sprite.IsFree) // does it handle collisions?
+                if (sprite.Collide != null) // does it handle collisions?
                 {
                     var target = Colliding(sprite, sprites);
                     if (target != null)
                     {
-                        if (sprite.IsFree)
-                        {
-                            sprite.Busy();
-                            sprite.Collide(target);
-                            sprite.Free();
-                            //sprite.Debounce(2);
-                        }
+                        sprite.Collide(target);
                     }
                 }
             }
@@ -120,11 +108,15 @@ namespace Blong.Services
         }
 
 
-        public void PauseGame() { }
+        public void PauseGame()
+        {
+            IsAwake = false;
+            _timer.DisposeAsync();
+        }
 
         public void RestartGame()
         {
-            Sprites = new List<Sprite>();
+            Awake();
         }
     }
 

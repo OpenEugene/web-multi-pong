@@ -22,9 +22,35 @@
     public Sprite Sprite { get ; set ; }
 
 
-    // get ot know your component lifecycle : 
-    // https://docs.microsoft.com/en-us/aspnet/core/blazor/lifecycle?view=aspnetcore-3.1
-    //
+    
+    /// <summary>
+    /// refect two vectors and get the new direction
+    /// </summary>
+    /// <param name="spriteVector"></param>
+    /// <param name="obstacleVector"></param>
+    /// <returns></returns>
+    protected double RefectDirection(Vector2 spriteVector, Vector2 obstacleVector)
+    {
+        var newVector = Vector2.Reflect(spriteVector,obstacleVector);
+        var angleRads = Math.Atan2(newVector.Y,newVector.X);
+        var direction = Sprite.ConvertToDegrees(angleRads);
+        return direction;
+    }
+
+    protected double RefectVerticleDirection(Sprite sprite)
+    {
+        var obstacleVector = new Vector2(0,1); //vertical wall
+
+        var direction = RefectDirection(sprite.Vector, obstacleVector);
+        return direction;
+    }
+
+    protected double RefectHorizontalDirection(Sprite sprite)
+    {
+        var obstacleVector = new Vector2(1,0); //horizontal wall
+        var direction = RefectDirection(sprite.Vector, obstacleVector);
+        return direction;
+    }
 
     protected override void OnParametersSet()
     {
@@ -32,61 +58,45 @@
         // init the timer update event
         Sprite.Render = (timeState) =>
         {
-            var sprite = (Sprite) timeState;
-            sprite.MoveBox();
+        var sprite = (Sprite) timeState;
+        sprite.MoveBox();
 
-            InvokeAsync(() => // threading dispatch wrapper
-            {
-                StateHasChanged();
+        InvokeAsync(() => // threading dispatch wrapper
+        {
+        StateHasChanged();
             });
         };
 
         #region Physics & Math
 
+        // reflect the vector
+        // https://stackoverflow.com/questions/41129573/unity-how-to-use-vector2-reflect
         Sprite.Collide = (target) =>
         {
-            Vector2 vectorResult = new Vector2(Sprite.Box.Top, Sprite.Box.Left);
-            
-            var vx = Sprite.Vx;
-            var vy = Sprite.Vy;
-
-
-            if (Sprite.Box.Left < target.Box.Right)  // overlap left
-            {
-                vy = -Sprite.Vy;
-            }
-
-
-            var angle = Math.Atan2(vy, vx);
-            Sprite.Direction = Sprite.ConvertToDegrees(angle);
-
+            Sprite.Direction = RefectVerticleDirection(Sprite);
         };
+
+        
 
         Sprite.OutOfBounds = (bounds) =>
         {
+
             var vx = Sprite.Vx;
             var vy = Sprite.Vy;
 
             if (Sprite.Box.Left < bounds.Left ||
                 Sprite.Box.Right > bounds.Right)
             {
-                vy = -Sprite.Vy;
+                Sprite.Direction = RefectVerticleDirection(Sprite);
             }
 
             if (Sprite.Box.Top < bounds.Top ||
                 Sprite.Box.Bottom > bounds.Bottom)
             {
-                vx = -Sprite.Vx;
+                Sprite.Direction = RefectHorizontalDirection(Sprite);
             }
 
-            var angle = Math.Atan2(vy, vx);
-            Sprite.Direction = Sprite.ConvertToDegrees(angle);
-
-            //if (Sprite.Box.Top < bounds.Top) Sprite.Box.Top = bounds.Top;
-            //if (Sprite.Box.Bottom > bounds.Bottom) Sprite.Box.Top = bounds.Bottom-Sprite.Box.Height;
-            //if (Sprite.Box.Left < bounds.Left) Sprite.Box.Left = bounds.Left;
-            //if (Sprite.Box.Right > bounds.Right) Sprite.Box.Left = bounds.Bottom-Sprite.Box.Width;
-
+            
         };
 
         #endregion
