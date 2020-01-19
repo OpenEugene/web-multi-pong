@@ -3,17 +3,17 @@
 @inject GameManager gameManager
 <style>
 
-    .paddle {
-        width: 25px;
-        height: 100px;
+    .paddle@(Sprite.Id) { 
+        top: @(Sprite.Box.Top)px;
+        left: @(Sprite.Box.Left)px;
+        height: @(Sprite.Box.Height)px;
+        width: @(Sprite.Box.Width)px;
+        position: absolute;
     }
-
-    
 
  </style>
 
-<div class="paddle @Class"
-     style="top: @(Sprite.Top)px;left: @(Sprite.Left)px;" />
+<div class="paddle@(Sprite.Id) @Class" />
 
 @code {
 
@@ -23,7 +23,6 @@
 
     [Parameter]
     public String Class { get ; set ; }
-
 
     // get ot know your component lifecycle : 
     // https://docs.microsoft.com/en-us/aspnet/core/blazor/lifecycle?view=aspnetcore-3.1
@@ -40,11 +39,11 @@
 
             if (sprite.Direction < 180)
             {
-                sprite.Top -= sprite.Speed;
+                sprite.Box.Top -= sprite.Speed;
             }
             else
             {
-                sprite.Top += sprite.Speed;
+                sprite.Box.Top += sprite.Speed;
             }
 
             InvokeAsync(() => // threading dispatch wrapper

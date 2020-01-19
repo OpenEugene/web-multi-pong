@@ -12,13 +12,13 @@ namespace Blong.Data
     /// </summary>
     public class Sprite
     {
-        public int Top { get; set; }
-        public int Left { get; set; }
-
+        
+        public Box Box { get; set; }
         public int Direction { get; set; }
         public int Speed { get; set; }
 
         public TimerCallback Update { get; set; }
+        public Guid Id = Guid.NewGuid();
 
     }
 }

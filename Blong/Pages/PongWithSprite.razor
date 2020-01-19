@@ -21,14 +21,14 @@
         background-color: crimson;
         float: left;
         position: relative;
-        left: 10;
+       
     }
 
     .right {
         background-color: cyan;
         float: right;
         position: relative;
-        left: 720;
+        
     }
 </style>
 
@@ -46,14 +46,17 @@
 <button class="btn btn-primary" @onclick="LeftDown">Down</button>
 
 @code {
-    private int currentCount = 0;
+   
     private int leftTop = 0;
 
     private Sprite ballSprite = new Sprite
     {
-        Top = 200,
-        Left = 300,
-
+        Box = new Box { 
+            Top = 200,
+            Left = 300,
+            Height = 25,
+            Width = 25
+        }
     };
 
 

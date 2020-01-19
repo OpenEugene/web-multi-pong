@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.IO.Enumeration;
 using System.Threading;
 using System.Threading.Tasks;
 using Blong.Data;
+using Microsoft.AspNetCore.Components;
 
 namespace Blong.Services
 {
@@ -19,12 +21,15 @@ namespace Blong.Services
                 callback: Update,
                 state: Sprites,
                 dueTime: 500,
-                period: 100);
+                period: 1000);
         }
 
         private void Update(object timerState)
         {
             var sprites = timerState as List<Sprite>;
+
+            DetectCollisions(sprites);
+
             foreach (var sprite in sprites)
             {
                 sprite.Update(sprite);
@@ -32,7 +37,17 @@ namespace Blong.Services
 
         }
 
-       
+        private void DetectCollisions(List<Sprite> sprites)
+        {
+            // look at al the sprites
+            foreach (var sprite in sprites)
+            {
+              
+                
+            }
+        }
+
+
         public void PauseGame() { }
 
         public void RestartGame()

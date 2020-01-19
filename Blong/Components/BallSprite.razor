@@ -3,24 +3,22 @@
 <style>
 
     .ball {
-        width: 25px;
-        height: 25px;
+        top: @(Sprite.Box.Top)px;
+        left: @(Sprite.Box.Left)px;
+        height: @(Sprite.Box.Width)px;
+        width: @(Sprite.Box.Width)px;
         background-color: whitesmoke;
-        position: relative;
+        position: absolute;
     }
 
  </style>
 
-<div class="ball"
-     style="top: @(Sprite.Top)px;left: @(Sprite.Left)px;" />
+<div class="ball" />
 
 @code {
 
-
     [Parameter]
     public Sprite Sprite { get ; set ; }
-
-  
 
 
     // get ot know your component lifecycle : 
@@ -29,12 +27,13 @@
 
     protected override void OnParametersSet()
     {
-
+        
         // init the timer update event
         Sprite.Update = (timeState) =>
         {
             var sprite = (Sprite) timeState;
-            sprite.Left -= 5;
+            sprite.Box.Left -= 5;
+           
             InvokeAsync(() => // threading dispatch wrapper
             {
                 StateHasChanged();
