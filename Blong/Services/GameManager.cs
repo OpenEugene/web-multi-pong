@@ -39,7 +39,7 @@ namespace Blong.Services
 
         private void DetectCollisions(List<Sprite> sprites)
         {
-            // look at al the sprites
+            // look for box overlaps
             foreach (var sprite in sprites)
             {
               

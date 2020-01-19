@@ -7,10 +7,10 @@ namespace Blong.Data
 {
     public class Box
     {
-        public int Top { get; set; }
-        public int Left { get; set; }
-        public int Height { get; set; }
-        public int Width { get; set; }
+        public int Top { get; set; } = 0;
+        public int Left { get; set; } = 0;
+        public int Height { get; set; } = 0;
+        public int Width { get; set; } = 0;
         public int Right => Left + Width;
         public int Bottom => Top + Height;
 

@@ -27,18 +27,33 @@
 
     protected override void OnParametersSet()
     {
-        
+
         // init the timer update event
         Sprite.Update = (timeState) =>
         {
             var sprite = (Sprite) timeState;
-            sprite.Box.Left -= 5;
-           
+            sprite.MoveBox();
+
             InvokeAsync(() => // threading dispatch wrapper
             {
                 StateHasChanged();
             });
         };
+
+    #region Physics & Math
+
+        Sprite.Collide = (target) =>
+        {
+
+            var vx = -Sprite.Vx;
+            var vy = -Sprite.Vy;
+            var angle = Math.Atan2(vy, vx);
+            Sprite.Direction = Sprite.ConvertToDegrees(angle);
+
+        };
+
+    #endregion
+       
 
     }
 }

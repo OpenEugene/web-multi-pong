@@ -14,11 +14,37 @@ namespace Blong.Data
     {
         
         public Box Box { get; set; }
-        public int Direction { get; set; }
-        public int Speed { get; set; }
+        public double Direction { get; set; } = 0;
+        public int Speed { get; set; } = 0;
 
         public TimerCallback Update { get; set; }
-        public Guid Id = Guid.NewGuid();
 
+
+        #region Physics & Math
+        public Action<Sprite> Collide { get; set; }
+        public void MoveBox()
+        {
+            Box.Top += Convert.ToInt32(Vx);
+            Box.Left += Convert.ToInt32(Vy);
+        }
+        
+        public Guid Id = Guid.NewGuid();
+        public double Vx => (Speed) * Math.Cos(ConvertToRadians(Direction));
+        public double Vy => (Speed) * Math.Sin(ConvertToRadians(Direction));
+        
+        public double ConvertToRadians(double angle)
+        {
+            return (Math.PI / 180) * angle;
+        }
+        public double ConvertToDegrees(double radians)
+        {
+            return (180 / Math.PI) * radians;
+        }
+
+
+        #endregion
+
+
+       
     }
 }
