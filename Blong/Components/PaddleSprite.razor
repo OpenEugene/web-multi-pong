@@ -52,5 +52,16 @@
             });
         };
 
+        Sprite.OutOfBounds = (bounds) =>
+        {
+            //just stop
+            Sprite.Speed = 0;
+
+            // get back in bounds
+            if (Sprite.Box.Top < bounds.Top) Sprite.Box.Top = bounds.Top;
+            if (Sprite.Box.Bottom > bounds.Bottom) Sprite.Box.Top = bounds.Bottom-Sprite.Box.Height;
+
+        };
+
     }
 }

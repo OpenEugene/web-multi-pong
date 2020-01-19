@@ -22,6 +22,7 @@ namespace Blong.Data
 
         #region Physics & Math
         public Action<Sprite> Collide { get; set; }
+        public Action<Box> OutOfBounds { get; set; }
         public void MoveBox()
         {
             Box.Top += Convert.ToInt32(Vx);

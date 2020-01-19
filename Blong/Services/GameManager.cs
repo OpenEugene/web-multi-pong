@@ -12,6 +12,7 @@ namespace Blong.Services
     public class GameManager
     {
         public List<Sprite> Sprites = new List<Sprite>();
+        public Box Bounds = null;
         private Timer _timer;
         public void AddSprite(Sprite sprite)
         {
@@ -22,21 +23,41 @@ namespace Blong.Services
             _timer = new Timer(
                 callback: Update,
                 state: Sprites,
-                dueTime: 500,
-                period: 500);
+                dueTime: 250,
+                period: 250);
         }
 
         private void Update(object timerState)
         {
             var sprites = timerState as List<Sprite>;
 
+            CheckOutOfBounds(sprites);
             DetectCollisions(sprites);
-
+    
             foreach (var sprite in sprites)
             {
                 sprite.Update(sprite);
             }
 
+        }
+
+        private void CheckOutOfBounds(List<Sprite> sprites)
+        {
+            if (Bounds == null) return;
+
+            foreach (var sprite in sprites)
+            {
+                if (sprite.OutOfBounds != null) // does it handle OOB?
+                {
+                    if (sprite.Box.Top < Bounds.Top ||
+                        sprite.Box.Bottom > Bounds.Bottom ||
+                        sprite.Box.Left < Bounds.Left ||
+                        sprite.Box.Right > Bounds.Right )
+                    {
+                        sprite.OutOfBounds(Bounds);
+                    }
+                }
+            }
         }
 
         private void DetectCollisions(List<Sprite> sprites)

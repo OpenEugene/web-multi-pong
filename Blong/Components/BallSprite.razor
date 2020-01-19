@@ -52,6 +52,13 @@
 
         };
 
+        Sprite.OutOfBounds = (bounds) =>
+        {
+            // just bounce off the walls
+            Sprite.Collide(new Sprite{Box=bounds});
+     
+        };
+
     #endregion
        
 

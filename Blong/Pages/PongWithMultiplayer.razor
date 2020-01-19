@@ -1,6 +1,7 @@
-﻿@page "/pong-game"
+﻿@page "/pong-multi"
 
-<h1>Pong Game</h1>
+@inject GameManager gameManager
+<h1>Pong Multiplayer</h1>
 
 <style>
 
@@ -18,12 +19,11 @@
     .right {
         background-color: cyan;
     }
-   
 </style>
 
 <div class="court">
     <PaddleSprite Sprite="@leftPaddleSprite" Class="left" />
-    <PaddleSprite Sprite="@rightPaddleSprite" Class="right"/>
+    <PaddleSprite Sprite="@rightPaddleSprite" Class="right" />
     <BallSprite Sprite="@ballSprite" />
 </div>
 
@@ -39,11 +39,10 @@
 </div>
 @code {
 
-    private GameManager gameManager = new GameManager();
-
     private Sprite ballSprite = new Sprite
     {
-        Box = new Box {
+        Box = new Box
+        {
             Top = 200,
             Left = 300,
             Height = 25,
@@ -56,7 +55,8 @@
 
     private Sprite leftPaddleSprite = new Sprite
     {
-        Box = new Box {
+        Box = new Box
+        {
             Height = 100,
             Width = 25
         }
@@ -65,7 +65,8 @@
 
     private Sprite rightPaddleSprite = new Sprite
     {
-        Box = new Box {
+        Box = new Box
+        {
             Left = 575,
             Height = 100,
             Width = 25
@@ -97,13 +98,14 @@
         rightPaddleSprite.Speed = 5;
     }
 
-    // get ot know your component lifecycle : 
+    // get ot know your component lifecycle :
     // https://docs.microsoft.com/en-us/aspnet/core/blazor/lifecycle?view=aspnetcore-3.1
     //
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
+
             gameManager.Bounds = new Box {Width = 600, Height = 400};
 
             gameManager.RestartGame();
