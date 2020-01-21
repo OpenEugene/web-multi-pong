@@ -1,6 +1,5 @@
 ﻿@using System.ComponentModel
 @using System.Numerics
-@inject GameManager gameManager
 <style>
 
     .ball {
@@ -56,14 +55,13 @@
     {
 
         // init the timer update event
-        Sprite.Render = (timeState) =>
+        Sprite.Render += (sender, args) => 
         {
-        var sprite = (Sprite) timeState;
-        sprite.MoveBox();
+      
+            InvokeAsync(() => // threading dispatch wrapper
+            {
+                StateHasChanged();
 
-        InvokeAsync(() => // threading dispatch wrapper
-        {
-        StateHasChanged();
             });
         };
 
@@ -96,7 +94,6 @@
                 Sprite.Direction = RefectHorizontalDirection(Sprite);
             }
 
-            
         };
 
         #endregion

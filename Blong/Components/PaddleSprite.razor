@@ -1,6 +1,4 @@
 ﻿@using System.IO
-
-@inject GameManager gameManager
 <style>
 
     .paddle@(Sprite.Id) { 
@@ -32,12 +30,8 @@
     {
 
         // init the timer update event
-        Sprite.Render = (timeState) =>
+        Sprite.Render += (sender, args) => 
         {
-            var sprite = (Sprite) timeState;
-            // convert direction and speed to delta-x
-
-            Sprite.MoveBox();
 
             InvokeAsync(() => // threading dispatch wrapper
             {

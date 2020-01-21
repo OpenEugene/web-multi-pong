@@ -1,4 +1,5 @@
 ﻿@page "/pong-component"
+@using Microsoft.Extensions.DependencyInjection
 
 <h1>Pong with Ball</h1>
 
@@ -49,11 +50,10 @@
     private int ballLeft = 300;
     private int ballTop = 200;
 
-   
     private void LeftUp()
     {
         leftTop -= 10;
-
+        
     }
     private void LeftDown()
     {
@@ -66,13 +66,13 @@
       
         // set up the game loop
         Timer _timer = new Timer(
-            callback: Update,
+            callback: Render,
             state: null,
-            dueTime: 1000,  // first check
-            period: 500);  // all other checks
+            dueTime: 50,  // first check
+            period: 50);  // all other checks
     }
 
-    private void Update(object timerState)
+    private void Render(object timerState)
     {
         InvokeAsync(() =>  // threading dispatch wrapper
         {

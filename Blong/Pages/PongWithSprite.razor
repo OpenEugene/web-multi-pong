@@ -80,11 +80,19 @@
         {
             // set up the game loop
             Timer _timer = new Timer(
-                callback: ballSprite.Render,
-                state: ballSprite,
-                dueTime: 1000,  // first check
-                period: 500);  // all other checks
+                callback: Render,
+                state: null,
+                dueTime: 50,  // first check
+                period: 50);  // all other checks
         }
     }
 
+    private void Render(object? state)
+    {
+        InvokeAsync(() =>  // threading dispatch wrapper
+        {
+            ballSprite.MoveBox();
+            StateHasChanged();
+        });
+    }
 }

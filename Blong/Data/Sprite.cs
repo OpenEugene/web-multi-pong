@@ -18,13 +18,12 @@ namespace Blong.Data
         public double Direction { get; set; } = 0;  //down
         public int Speed { get; set; } = 0;
 
-        public TimerCallback Render { get; set; }
+        public EventHandler Render;
 
+        public Action<Sprite> Collide { get; set; }
 
         #region Physics & Math
 
-        public Action<Sprite> Collide { get; set; }
-       
         public Action<Box> OutOfBounds { get; set; }
         public void MoveBox()
         {
@@ -47,6 +46,8 @@ namespace Blong.Data
         {
             return (180 / Math.PI) * radians;
         }
+
+        
 
         #endregion
 

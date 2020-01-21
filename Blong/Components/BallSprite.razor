@@ -1,5 +1,4 @@
 ﻿@using System.ComponentModel
-@inject GameManager gameManager
 <style>
 
     .ball {
@@ -29,13 +28,13 @@
     {
 
         // init the timer update event
-        Sprite.Render = (timeState) =>
+        Sprite.Render += (sender, args) => 
         {
-            var sprite = (Sprite) timeState;
-            sprite.MoveBox();
-
+          
             InvokeAsync(() => // threading dispatch wrapper
             {
+                //make UI changes
+
                 StateHasChanged();
             });
         };
@@ -79,7 +78,7 @@
             var angle = Math.Atan2(vy, vx);
             Sprite.Direction = Sprite.ConvertToDegrees(angle);
 
-  
+
         };
 
         #endregion

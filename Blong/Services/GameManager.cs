@@ -17,12 +17,6 @@ namespace Blong.Services
         public void AddSprite(Sprite sprite)
         {
             Sprites.Add(sprite);
-
-            #region multiplayer
-
-            AttachToMaster(sprite); // if there is another with the same Id hijack it's box 
-
-            #endregion
         }
 
         public void Awake()
@@ -30,8 +24,8 @@ namespace Blong.Services
             _timer = new Timer(
                 callback: Update,
                 state: Sprites,
-                dueTime: 100,
-                period: 100);
+                dueTime: 50,
+                period: 50);
             IsAwake = true;
         }
 
@@ -48,7 +42,8 @@ namespace Blong.Services
         {
             foreach (var sprite in sprites)
             {
-                sprite.Render(sprite);
+                sprite.MoveBox();
+                sprite.Render(this,null);
             }
         }
 
@@ -113,24 +108,7 @@ namespace Blong.Services
 
             return null;
         }
-
-        private void SyncMultiplayer(List<Sprite> sprites)
-        {
-            var spriteIds = sprites.Select(s => s.Id).Distinct();
-
-            foreach (var id in spriteIds)
-            {
-                var masterSprite = sprites.FirstOrDefault(s => s.Id == id);
-                var otherSprites = sprites.Where(s => s.Id == id && s.UniqueId != masterSprite.UniqueId);
-                foreach (var sprite in otherSprites)
-                {
-                    sprite.Speed = masterSprite.Speed;
-                    sprite.Direction = masterSprite.Direction;
-                    sprite.Box = masterSprite.Box;  //super dicey
-                }
-            }
-        }
-
+        
         private List<Sprite> GetSprites()
         {
 
@@ -166,6 +144,25 @@ namespace Blong.Services
         {
             Awake();
         }
+
+        #region multiplayer
+
+        public void RegisterSprite(ref Sprite sprite)
+        {
+            var id = sprite.Id;
+            var registeredSprite = Sprites.FirstOrDefault(s => s.Id == id);
+            if (registeredSprite == null)
+            {
+                Sprites.Add(sprite);
+            }
+            else
+            {
+                sprite = registeredSprite;  // this is the trick!
+            }
+
+        }
+
+        #endregion
     }
 
 }

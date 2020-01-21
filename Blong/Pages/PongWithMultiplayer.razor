@@ -44,43 +44,11 @@
 </div>
 @code {
 
-    private Sprite ballSprite = new Sprite
-    {
-        Id="ballSprite",
-        Box = new Box
-        {
-            Top = 200,
-            Left = 300,
-            Height = 25,
-            Width = 25
-        },
-        Direction = -120,
-        Speed = 5
+    private Sprite ballSprite;
 
-    };
+    private Sprite leftPaddleSprite;
 
-    private Sprite leftPaddleSprite = new Sprite
-    {
-        Id = "leftPaddleSprite",
-        Box = new Box
-        {
-            Height = 100,
-            Width = 25
-        }
-
-    };
-
-    private Sprite rightPaddleSprite = new Sprite
-    {
-        Id = "rightPaddleSprite",
-        Box = new Box
-        {
-            Left = 575,
-            Height = 100,
-            Width = 25
-        }
-
-    };
+    private Sprite rightPaddleSprite;
 
     private void LeftUp()
     {
@@ -118,10 +86,58 @@
 
     private void Reset()
     {
+        ballSprite.Direction = -120;
+        ballSprite.Speed = 5;
         ballSprite.Box.Top = 200;
         ballSprite.Box.Left = 300;
     }
 
+    protected override void OnInitialized()
+    {
+        ballSprite = new Sprite()
+        {
+            Id="ballSprite",
+            Box = new Box
+            {
+                Top = 200,
+                Left = 300,
+                Height = 25,
+                Width = 25
+            },
+            Direction = -120,
+            Speed = 5
+
+        };
+
+        leftPaddleSprite = new Sprite
+        {
+            Id = "leftPaddleSprite",
+            Box = new Box
+            {
+                Height = 100,
+                Width = 25
+            }
+
+        };
+
+        rightPaddleSprite = new Sprite
+        {
+            Id = "rightPaddleSprite",
+            Box = new Box
+            {
+                Left = 575,
+                Height = 100,
+                Width = 25
+            }
+
+        };
+
+        gameManager.Bounds = new Box {Width = 600, Height = 400};
+
+        gameManager.RegisterSprite(ref ballSprite);
+        gameManager.RegisterSprite(ref leftPaddleSprite);
+        gameManager.RegisterSprite(ref rightPaddleSprite);
+    }
 
     // get ot know your component lifecycle :
     // https://docs.microsoft.com/en-us/aspnet/core/blazor/lifecycle?view=aspnetcore-3.1
@@ -131,12 +147,6 @@
         if (firstRender)
         {
 
-            gameManager.Bounds = new Box {Width = 600, Height = 400};
-
-            gameManager.AddSprite(ballSprite);
-            gameManager.AddSprite(leftPaddleSprite);
-            gameManager.AddSprite(rightPaddleSprite);
-
             if (!gameManager.IsAwake)
             {
                 gameManager.Awake();
@@ -144,7 +154,5 @@
 
         }
     }
-
-   
 
 }
